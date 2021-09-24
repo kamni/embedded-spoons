@@ -1,7 +1,6 @@
 (ns embedded-spoons.core
-  (:gen-class))
+  (:gen-class)
+  (:require [embedded-spoons.evil :as evil]))
 
-(defn -main
-  "I don't do a whole lot ... yet."
-  [& args]
-  (println "Hello, World!"))
+(defn -main [& args]
+  (println (evil/summon)))
