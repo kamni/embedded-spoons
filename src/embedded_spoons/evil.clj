@@ -18,28 +18,47 @@
 ;;                                                                            ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(def ^:private bet 2)
+(def ^:private gimel 3)
+(def ^:private vav 6)
+(def ^:private chet 8)
+(def ^:private kaf 20)
+(def ^:private lamed 30)
+(def ^:private mem 40)
+
 (defn- pentagram [incantations]
   (. Integer parseInt (join "" (take 3 (repeat (str incantations))))))
 
-(defn- rend-asunder [sacrifice]
-  (->> (map (juxt inc dec) sacrifice) (map #(reduce + %)) (map #(/ % 2))))
+(defn- call-quarters []
+  (let [elements [:air :fire :water :earth]]
+    (repeat (count elements) (pentagram vav))))
+
+(defn- consecrate-space [sacred-space]
+  (map #(/ %1 %2) sacred-space (map pentagram [bet gimel gimel gimel])))
+
+(defn- declare-intent [ritual-words]
+  (let [hand-gestures [(+ gimel kaf) (+ gimel mem) (+ chet lamed) (+ chet lamed)]]
+    (map #(* %1 %2) hand-gestures ritual-words)))
+
+(defn- ritual-sacrifice [prepared-sacrifice]
+  (->> (map (juxt inc dec) prepared-sacrifice) (map #(reduce + %)) (map #(/ % 2))))
 
 (defn- so-mote-it-be [all-hail] all-hail)
 
+(defn- invoke-the-demon [ring-the-bell]
+  (let [words-of-power [so-mote-it-be so-mote-it-be (partial + (- gimel)) so-mote-it-be]]
+    (map #(%1 %2) words-of-power ring-the-bell)))
+
+(defn- sign-the-contract [blood]
+  (apply str (map char blood)))
+
 (defn summon []
-  (let [bet 2
-        gimel 3
-        vav 6
-        chet 8
-        kaf 20
-        lamed 30
-        mem 40
-        elements [:air :fire :water :earth]]
-    (->>
-      (repeat (count elements) (pentagram vav))
-      (map #(/ %2 %1) (map pentagram [bet gimel gimel gimel]))
-      (map #(* %1 %2) [(+ gimel kaf) (+ gimel mem) (+ chet lamed) (+ chet lamed)])
-      (rend-asunder)
-      (map #(%1 %2) [so-mote-it-be so-mote-it-be (partial + (-  gimel)) so-mote-it-be])
-      (map char)
-      (apply str)))) ; => EVIL
+  (->
+    (call-quarters)
+    (consecrate-space)
+    (declare-intent)
+    (ritual-sacrifice)
+    (invoke-the-demon)
+    (sign-the-contract))) ; => EVIL
+
+(summon)
